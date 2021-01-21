@@ -34,11 +34,11 @@ type UserDetails struct {
 //UserInfo dfgsgs
 var UserInfo UserDetails
 
-func setCredentials(userToken *credentials, ID int) {
-	userToken.ConsumerKey = "VTOzL1OQsK9QE0UWoh3SaVOmn"
-	userToken.ConsumerSecret = "7j2ggtO3EVJBvMBlXSkDspm0cZF4d9NTthm5hOzsRXcdORLzwc"
-	userToken.AccessToken = "1347416616-Jkvxh8jhNlFkAp54gzJTKAb2l6S8J2TUf4W3i4B"
-	userToken.AccessTokenSecret = "lEKF0zRba81q98NzPC1q5u4TnUKEhb9S7rSCQ5Q1oZplO"
+func setCredentials(userToken *credentials, c Cred) {
+	userToken.ConsumerKey = c.Apikey
+	userToken.ConsumerSecret = c.Apisecret
+	userToken.AccessToken = c.Accesskey
+	userToken.AccessTokenSecret = c.Accesssecret
 }
 
 //returnClient() loads the credentials from struct to the api and returns a twittergo.Client object
@@ -88,17 +88,15 @@ func verify(client *twittergo.Client) UserDetails {
 
 }
 
-//RequestUserDetails loads the user tokes of USERID from a DB to a struct, uses the struct to authenticate client and uses client to access essential user details and store then to DB
-func RequestUserDetails(ID int) {
-	var (
-		cred   credentials
-		client *twittergo.Client
-	)
-	setCredentials(&cred, ID)
-	//fmt.Printf("Credentials : \n%v\n\n", cred)
-	client = returnClient(cred)
+//RequestUserDetails loads the user tokes of USERName from a DB to a struct, uses the struct to authenticate client and uses client to access essential user details and store then to DB
+func RequestUserDetails(name string) {
+	var cred credentials
+
+	usercred := ObtainTokenbyName(name)
+
+	setCredentials(&cred, usercred)
+
+	client := returnClient(cred)
 
 	UserInfo = verify(client)
-	//fmt.Printf("User Details : \n%v\n\n", UserInfo)
-
 }

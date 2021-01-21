@@ -1,8 +1,6 @@
 package twitterapi
 
 import (
-	"fmt"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //using sqlite
 )
@@ -28,10 +26,9 @@ func readCredDBtostruct(db *gorm.DB, id int) Cred {
 
 	var cred Cred
 	db.Raw("SELECT * FROM Cred  WHERE ID = ?", id).Scan(&cred)
-	fmt.Println(cred)
+	//fmt.Println(cred)
 	return cred
 }
-
 func readUserDBtostruct(db *gorm.DB, name string) User {
 	var user User
 	db.Raw("SELECT * FROM User  WHERE Accname = ?", name).Scan(&user)
@@ -39,27 +36,15 @@ func readUserDBtostruct(db *gorm.DB, name string) User {
 	return user
 }
 
-//Operation exported function
-func Operation() {
-	db, err := gorm.Open("sqlite3", "twitter1.db")
+//ObtainTokenbyName exports Cred struct of UserName Passed
+func ObtainTokenbyName(n string) Cred {
+	db, err := gorm.Open("sqlite3", "twitter.db")
 	if err != nil {
 		panic("can't connect to database")
 	}
 	defer db.Close()
 	db.LogMode(true)
-	userinfo := readUserDBtostruct(db, "Parikshit Ghosh")
+	userinfo := readUserDBtostruct(db, n)
 	usercred := readCredDBtostruct(db, userinfo.ID)
-	//userinfo, usercred := readDBtostruct(db)
-
-	fmt.Println("\n\nBaidurya details :")
-	fmt.Printf("\tApp ID : %d\n", userinfo.ID)
-	fmt.Printf("\tApp Name %d\n", userinfo.Appid)
-	fmt.Printf("\tApp Name %s\n", userinfo.Appname)
-	fmt.Printf("\tApp Name %s\n", userinfo.Accname)
-	fmt.Println("\n\nBaidurya Credentials :")
-	fmt.Printf("\tAPI Key %s\n", usercred.Apikey)
-	fmt.Printf("\tAPI Secret %s\n", usercred.Apisecret)
-	fmt.Printf("\tAccess Key %s\n", usercred.Accesskey)
-	fmt.Printf("\tAccess Secret %s\n", usercred.Accesssecret)
-
+	return usercred
 }
