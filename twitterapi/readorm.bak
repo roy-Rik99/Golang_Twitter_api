@@ -1,0 +1,65 @@
+package twitterapi
+
+import (
+	"fmt"
+
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+)
+
+//UserCred struct stores user credentials
+type UserCred struct {
+	gorm.Model
+	AppID        uint32 `gorm:"type:uint;primaryKey"`
+	AppName      string `gorm:"type:varchar(50)"`
+	accountName  string `gorm:"type:varchar(20)"`
+	apiKey       string `gorm:"type:varchar(100)"`
+	apiSecret    string `gorm:"type:varchar(100)"`
+	accessKey    string `gorm:"type:varchar(100)"`
+	accessSecret string `gorm:"type:varchar(100)"`
+}
+
+//User struct stores user infoformation
+type User struct {
+	gorm.Model
+	ID           uint64 `gorm:"primaryKey"`
+	Name         string
+	ScreenName   string
+	Desc         string
+	Location     string
+	FriendsCount uint16
+	URL          string
+}
+
+func setup(db *gorm.DB) {
+	db.AutoMigrate(&UserCred{}, &User{})
+}
+func populatecred(db *gorm.DB) {
+	users := []UserCred{
+		{AppID: 19913800, AppName: "XS_SignUp_Baidurya", accountName: "Baidurya Roy", apiKey: "VTOzL1OQsK9QE0UWoh3SaVOmn", apiSecret: "7j2ggtO3EVJBvMBlXSkDspm0cZF4d9NTthm5hOzsRXcdORLzwc", accessKey: "1347416616-Jkvxh8jhNlFkAp54gzJTKAb2l6S8J2TUf4W3i4B", accessSecret: "lEKF0zRba81q98NzPC1q5u4TnUKEhb9S7rSCQ5Q1oZplO"},
+		{AppID: 19913805, AppName: "XS_SignUp_Parikshit", accountName: "Parikshit Ghosh", apiKey: "b03giBTWDQNHStyeGWhIxuDbv", apiSecret: "QrKw5zQtFz3781qvq6R9rjSqD0gGID4SXrQLWv0D82dxaC1O71", accessKey: "295233516-V6RyhF1KiGLirH6777pSZ3mDuonbLx3L4Dd4kIMH", accessSecret: "8MNw7R8FAsy7Qc7yBce6bWtNlaDtGiAzOriWBuNb8Mbjc"},
+	}
+	for _, u := range users {
+		db.Create(&u)
+	}
+}
+
+//CreateDB creates a database and does operation on it
+func CreateDB() {
+	db, err := gorm.Open(sqlite.Open("Database.db"), &gorm.Config{})
+	if err != nil {
+		fmt.Print("Can't Connect to Database. Error : ")
+		panic(err)
+	}
+	setup(db)
+	populatecred(db)
+	var u UserCred
+	result := db.Find(&u)
+	rows, err := result.Rows()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("\n\nROWS : \t\t%v\n\n", rows)
+	fmt.Printf("\n\nROWS AFFECTED : \t%v\n\n", result.RowsAffected)
+	//, result.RowsAffected)
+}

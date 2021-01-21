@@ -1,0 +1,260 @@
+func verify(client *twittergo.Client) UserDetails {
+	var (
+		err  error
+		req  *http.Request
+		resp *twittergo.APIResponse
+		//user     *twittergo.User
+		endpoint string
+		usrparam string
+	)
+	params := url.Values{}
+	params.Add("include_email", "true")
+	endpoint = "/1.1/account/verify_credentials.json?"
+	usrparam = params.Encode()
+	req, err = http.NewRequest("GET", (endpoint + usrparam), nil)
+	if err != nil {
+		fmt.Printf("Could not parse request: %v\n", err)
+		os.Exit(1)
+	}
+	resp, err = client.SendRequest(req)
+	if err != nil {
+		fmt.Printf("Could not send request: %v\n", err)
+		os.Exit(1)
+	}
+	defer resp.Body.Close()
+
+	tempJSON := resp.ReadBody()
+	fmt.Printf("\n\n%v\n\n", tempJSON)
+	var jsonvar UserDetails
+	json.Unmarshal([]byte(tempJSON), &jsonvar)
+	
+	/*user = &twittergo.User{}
+	err = resp.Parse(user)
+	if err != nil {
+		fmt.Printf("Problem parsing response: %v\n", err)
+		os.Exit(1)
+	}
+	newUser.userID = user.Id()
+	newUser.screenName = user.ScreenName()
+	newUser.name = user.Name()*/
+
+}
+func displaySettings(client *twittergo.Client) {
+	var (
+		err  error
+		req  *http.Request
+		resp *twittergo.APIResponse
+	)
+	req, err = http.NewRequest("GET", "/1.1/account/settings.json", nil)
+	if err != nil {
+		fmt.Printf("Could not parse request: %v\n", err)
+		os.Exit(1)
+	}
+	resp, err = client.SendRequest(req)
+	if err != nil {
+		fmt.Printf("Could not send request: %v\n", err)
+		os.Exit(1)
+	}
+	defer resp.Body.Close()
+	tempJSON := resp.ReadBody()
+	fmt.Printf("\n\nUser Settings : %v\n", tempJSON)
+}
+
+func updateAccountDetails(client *twittergo.Client, tempUser UserDetails, choice int) (errno int) {
+	var (
+		err      error
+		req      *http.Request
+		resp     *twittergo.APIResponse
+		endpoint string
+		usrparam string
+	)
+
+	params := url.Values{}
+	if choice == 1 {
+		params.Add("name", tempUser.name)
+		fmt.Printf("\n\nChanging Name!")
+	} else if choice == 2 {
+		params.Add("description", tempUser.desc)
+		fmt.Printf("\n\nChanging Description!")
+	} else if choice == 3 {
+		params.Add("location", tempUser.location)
+		fmt.Printf("\n\nChanging Location!")
+	} else {
+		return 2
+	}
+	endpoint = "/1.1/account/update_profile.json?"
+	usrparam = params.Encode()
+	req, err = http.NewRequest("POST", (endpoint + usrparam), nil)
+
+	if err != nil {
+		fmt.Printf("Could not parse request: %v\n", err)
+		os.Exit(1)
+	}
+
+	resp, err = client.SendRequest(req)
+	if err != nil {
+		fmt.Printf("Could not send request: %v\n", err)
+		os.Exit(1)
+	}
+	//fmt.Printf("\n\nAccount Details :\n%v\n\n", resp.ReadBody())
+
+	defer resp.Body.Close()
+
+	return 0
+
+}
+func showAccountDetails(client *twittergo.Client) (errno int) {
+	var (
+		err      error
+		req      *http.Request
+		resp     *twittergo.APIResponse
+		endpoint string
+	)
+
+	endpoint = "/1.1/account/update_profile.json"
+	req, err = http.NewRequest("POST", endpoint, nil)
+
+	if err != nil {
+		fmt.Printf("Could not parse request: %v\n", err)
+		os.Exit(1)
+	}
+
+	resp, err = client.SendRequest(req)
+	if err != nil {
+		fmt.Printf("Could not send request: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("\n\nAccount Details :\n%v\n\n", resp.ReadBody())
+
+	defer resp.Body.Close()
+
+	return 0
+
+}
+
+func updateBanner(client *twittergo.Client, filename string) (errno int) {
+	var (
+		err      error
+		req      *http.Request
+		resp     *twittergo.APIResponse
+		endpoint string
+	)
+
+	fmt.Printf("\n\nChanging Banner!")
+	params := url.Values{}
+	params.Add("banner", img)
+	endpoint = "/1.1/account/update_profile_banner.json?"
+	result := endpoint + params.Encode()
+	fmt.Printf("\n\n%v\n\n", img)
+
+	req, err = http.NewRequest("POST", result, nil)
+
+	if err != nil {
+		fmt.Printf("Could not parse request: %v\n", err)
+		os.Exit(1)
+	}
+
+	resp, err = client.SendRequest(req)
+	if err != nil {
+		fmt.Printf("Could not send request: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("\n\nResponse :\n%v\n\n", resp)
+
+	defer resp.Body.Close()
+
+	return 0
+
+}
+func RequestUserDetails(ID int) {
+	var (
+		cred credentials
+		client *twittergo.Client
+	)
+	setCredentials(&cred, ID)
+
+	client = returnClient(cred)
+
+	UserInfo = verify(client)
+	/*fmt.Printf("\n\nUser Verified...\n\n")
+	fmt.Printf("ID:\t\t%v\n", newUser.userID)
+	fmt.Printf("Name:\t\t%v\n", newUser.name)
+	fmt.Printf("Screen Name:\t%v\n", newUser.screenName)*/
+
+	//displaySettings(client)
+
+	//showAccountDetails(client)
+
+	/*newUser.name = "Anonymous007"
+	newUser.desc = "Coding everyday!"
+	newUser.location = "Canada"
+	updateAccountDetails(client, newUser, 1)
+	updateAccountDetails(client, newUser, 2)
+	updateAccountDetails(client, newUser, 3)*/
+
+	//showAccountDetails(client)
+	//displaySettings(client)
+	//fmt.Printf("\n\n\nApp Token :\t%v\n\n\n", client.GetAppToken())
+	//verify(client)
+
+	//updateBanner(client, "")
+}
+func populatecred(db *gorm.DB) {
+	/*var (
+		appid             uint32
+		appname           string
+		accountname       string
+		consumerkey       string
+		consumersecret    string
+		accesstoken       string
+		accesstokensecret string
+	)
+	fmt.Println("Enter APP ID? ")
+	fmt.Scanln(&appid)
+	fmt.Println("Enter APP Name? ")
+	fmt.Scanln(&appname)
+	fmt.Println("Enter Account Name? ")
+	fmt.Scanln(&accountname)
+	fmt.Println("Enter API key? ")
+	fmt.Scanln(&consumerkey)
+	fmt.Println("Enter API secret? ")
+	fmt.Scanln(&consumersecret)
+	fmt.Println("Enter ACCESS key? ")
+	fmt.Scanln(&accesstoken)
+	fmt.Println("Enter ACCESS secret? ")
+	fmt.Scanln(&accesstokensecret)*/
+	users := []UserCred{
+		{AppID: 19913800, AppName: "XS_SignUp_Baidurya", accountName: "Baidurya Roy", apiKey: "VTOzL1OQsK9QE0UWoh3SaVOmn", apiSecret: "7j2ggtO3EVJBvMBlXSkDspm0cZF4d9NTthm5hOzsRXcdORLzwc", accessKey: "1347416616-Jkvxh8jhNlFkAp54gzJTKAb2l6S8J2TUf4W3i4B", accessSecret: "lEKF0zRba81q98NzPC1q5u4TnUKEhb9S7rSCQ5Q1oZplO"},
+		{AppID: 19913805, AppName: "XS_SignUp_Parikshit", accountName: "Parikshit Ghosh", apiKey: "b03giBTWDQNHStyeGWhIxuDbv", apiSecret: "QrKw5zQtFz3781qvq6R9rjSqD0gGID4SXrQLWv0D82dxaC1O71", accessKey: "295233516-V6RyhF1KiGLirH6777pSZ3mDuonbLx3L4Dd4kIMH", accessSecret: "8MNw7R8FAsy7Qc7yBce6bWtNlaDtGiAzOriWBuNb8Mbjc"},
+	}
+	/*baidurya := UserCred{
+		AppID:        19913800,
+		AppName:      "XS_SignUp_Baidurya",
+		accountName:  "Baidurya Roy",
+		apiKey:       "VTOzL1OQsK9QE0UWoh3SaVOmn",
+		apiSecret:    "7j2ggtO3EVJBvMBlXSkDspm0cZF4d9NTthm5hOzsRXcdORLzwc",
+		accessKey:    "1347416616-Jkvxh8jhNlFkAp54gzJTKAb2l6S8J2TUf4W3i4B",
+		accessSecret: "lEKF0zRba81q98NzPC1q5u4TnUKEhb9S7rSCQ5Q1oZplO"}
+	parikshit := UserCred{
+		AppID:        19913805,
+		AppName:      "XS_SignUp_Parikshit",
+		accountName:  "Parikshit Ghosh",
+		apiKey:       "b03giBTWDQNHStyeGWhIxuDbv",
+		apiSecret:    "QrKw5zQtFz3781qvq6R9rjSqD0gGID4SXrQLWv0D82dxaC1O71",
+		accessKey:    "295233516-V6RyhF1KiGLirH6777pSZ3mDuonbLx3L4Dd4kIMH",
+		accessSecret: "8MNw7R8FAsy7Qc7yBce6bWtNlaDtGiAzOriWBuNb8Mbjc"}
+
+	result := db.Create(&baidurya)
+	if result.Error != nil {
+		fmt.Print("\n\nError : ")
+		panic(result.Error)
+	}
+	fmt.Printf("\n\n\tNew Record added!\n\nRows Affected : %v\n\n", result.RowsAffected)
+
+	result = db.Create(&parikshit)
+	if result.Error != nil {
+		fmt.Print("\n\nError : ")
+		panic(result.Error)
+	}
+	fmt.Printf("\n\n\tNew Record added!\n\nRows Affected : %v\n\n", result.RowsAffected)*/
+}
