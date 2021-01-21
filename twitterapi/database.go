@@ -9,56 +9,57 @@ import (
 
 //User struct stores user credentials
 type User struct {
-	ID      int
-	Appid   uint32
-	Appname string
-	Accname string
+	ID      int    `gorm:"column:ID"`
+	Appid   uint32 `gorm:"column:Appid"`
+	Appname string `gorm:"column:Appname"`
+	Accname string `gorm:"column:Accname"`
 }
 
 //Cred store user tokens
 type Cred struct {
-	ID           int
-	Apikey       string
-	Apisecret    string
-	Accesskey    string
-	Accesssecret string
+	ID           int    `gorm:"column:ID"`
+	Apikey       string `gorm:"column:Apikey"`
+	Apisecret    string `gorm:"column:Apisecret"`
+	Accesskey    string `gorm:"column:Accesskey"`
+	Accesssecret string `gorm:"column:Accesssecret"`
 }
 
-func readDBtostruct(db *gorm.DB) (User, Cred) {
+func readCredDBtostruct(db *gorm.DB, id int) Cred {
 
-	var user User
 	var cred Cred
-
-	//b.First(&user, "ID = ?", 69)
-	//db.First(&cred, "ID = ?", 69)
-	db.Raw("SELECT * FROM User  WHERE ID = ?", 69).Scan(&user)
-	db.Raw("SELECT * FROM Cred  WHERE ID = ?", 69).Scan(&cred)
-	fmt.Println(user)
+	db.Raw("SELECT * FROM Cred  WHERE ID = ?", id).Scan(&cred)
 	fmt.Println(cred)
-	return user, cred
+	return cred
+}
+
+func readUserDBtostruct(db *gorm.DB, name string) User {
+	var user User
+	db.Raw("SELECT * FROM User  WHERE Accname = ?", name).Scan(&user)
+	//fmt.Println(user)
+	return user
 }
 
 //Operation exported function
 func Operation() {
-	db, err := gorm.Open("sqlite3", "twitter.db")
+	db, err := gorm.Open("sqlite3", "twitter1.db")
 	if err != nil {
 		panic("can't connect to database")
 	}
 	defer db.Close()
 	db.LogMode(true)
-	readDBtostruct(db)
-	/*userinfo, usercred := readDBtostruct(db)
+	userinfo := readUserDBtostruct(db, "Parikshit Ghosh")
+	usercred := readCredDBtostruct(db, userinfo.ID)
+	//userinfo, usercred := readDBtostruct(db)
 
 	fmt.Println("\n\nBaidurya details :")
-	fmt.Printf("\tApp ID : %v\n", userinfo.ID)
-	fmt.Printf("\tApp Name %v\n", userinfo.Appid)
-	fmt.Printf("\tApp Name %v\n", userinfo.Appname)
-	fmt.Printf("\tApp Name %v\n", userinfo.Accname)
+	fmt.Printf("\tApp ID : %d\n", userinfo.ID)
+	fmt.Printf("\tApp Name %d\n", userinfo.Appid)
+	fmt.Printf("\tApp Name %s\n", userinfo.Appname)
+	fmt.Printf("\tApp Name %s\n", userinfo.Accname)
 	fmt.Println("\n\nBaidurya Credentials :")
-	fmt.Printf("\tApp ID : %v\n", usercred.ID)
-	fmt.Printf("\tAPI Key %v\n", usercred.Apikey)
-	fmt.Printf("\tAPI Secret %v\n", usercred.Apisecret)
-	fmt.Printf("\tAccess Key %v\n", usercred.Accesskey)
-	fmt.Printf("\tAccess Secret %v\n", usercred.Accesssecret)*/
+	fmt.Printf("\tAPI Key %s\n", usercred.Apikey)
+	fmt.Printf("\tAPI Secret %s\n", usercred.Apisecret)
+	fmt.Printf("\tAccess Key %s\n", usercred.Accesskey)
+	fmt.Printf("\tAccess Secret %s\n", usercred.Accesssecret)
 
 }
