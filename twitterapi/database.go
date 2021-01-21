@@ -43,7 +43,7 @@ func ObtainTokenbyName(n string) Cred {
 		panic("can't connect to database")
 	}
 	defer db.Close()
-	db.LogMode(true)
+	//db.LogMode(true)
 	userinfo := readUserDBtostruct(db, n)
 	usercred := readCredDBtostruct(db, userinfo.ID)
 	return usercred
