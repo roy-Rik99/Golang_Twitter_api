@@ -45,18 +45,18 @@ func index(w http.ResponseWriter, r *http.Request) {
 func profile(w http.ResponseWriter, r *http.Request) {
 	var err int
 	usrname := r.FormValue("usrname")
-	user, err = twitterapi.Viewprofile(usrname)
 
-	//fmt.Printf("%v\n", user)
-	//fmt.Println(err)
+	user, err = twitterapi.Viewprofile(usrname)
 	if err != 0 {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		fmt.Println("\nALERT :--> USER NOT FOUND")
 		return
 	}
+
 	tpl.ExecuteTemplate(w, "profile.html", user)
 }
 func register(w http.ResponseWriter, r *http.Request) {
+	var err int
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -67,7 +67,15 @@ func register(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("\nALERT :--> USER-Name Field is Empty!\n\tPlease enter valid USER-Name.")
 		return
 	}
+
+	_, err = twitterapi.Viewprofile(usrname)
+	if err == 0 {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		fmt.Println("\nALERT :--> USER-Name already exists!")
+		return
+	}
 	user.Username = usrname
+
 	tpl.ExecuteTemplate(w, "register.html", user)
 }
 func welcome(w http.ResponseWriter, r *http.Request) {
@@ -98,7 +106,7 @@ func twitteregister(w http.ResponseWriter, r *http.Request) {
 	}
 	usrname := r.FormValue("usrname")
 	var err int
-	user, err = twitterapi.Viewprofile(usrname)
+	_, err = twitterapi.Viewprofile(usrname)
 
 	if err == 0 {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
