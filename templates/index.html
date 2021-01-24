@@ -11,15 +11,16 @@
 <body>
 <div class="container">
     <div class="jumbotron text-center text-success">
-        <h1><span class="fa fa-lock"></span> Sign In</h1>
+        <h1><span class="fa fa-sign-in"></span> Sign In</h1>
         <br>
-        <p>Login:</p>
+        <h5><span class="fa fa-key"></span> Login :- </h5>
 
-        <form action="/profile" method="POST" id="login">
+        <form action="/profile" method="POST">
             <label for="uname">User Name:</label>
             <input type="text" id="uname" name="usrname">
+            <button type="submit" value="Submit" class="btn btn-danger"> LOGIN </button>
         </form>
-        <button type="submit" form="login" value="Submit" class="btn btn-danger"><span class="fa fa-twitter"></span> LOGIN</button>
+        
 
     </div>
 </div>
@@ -27,18 +28,19 @@
     <div class="jumbotron text-center text-success">
         <h1><span class="fa fa-lock"></span> Sign Up</h1>
         <br>
-        <p>Register as New User:</p>
+        <h5><span class="fa fa-key"></span> Register as New User :- </h5>
 
-        <form action="/register" method="POST" id="register">
+        <form action="/register" method="POST">
             <label for="uname">User Name:</label>
             <input type="text" id="uname" name="usrname">
+            <button type="submit" value="Submit" class="btn btn-danger"> REGISTER </button>
         </form>
-        <button type="submit" form="register" value="Submit" class="btn btn-danger"><span class="fa fa-twitter"></span> Register</button>
+        
         
         <br>
         <br>
 
-        <p>Register with twitter:</p>        
+        <h5><span class="fa fa-key"></span> Register with twitter :- </h5>       
        <form action="/twitteregister" method="POST" id="twitter">
         <label for="uname">User Name:</label>
         <input type="text" id="uname" name="usrname">

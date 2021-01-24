@@ -16,7 +16,7 @@
 </div>
 <div class="container">
     <div class="jumbotron text-center text-success">
-        <h1><span class="fa fa-lock"></span> Your Information :--- </h1>
+        <h1><span class="fa fa-resistance"></span>      Your Information :-     <span class="fa fa-resistance"></span></h1>
 
         <p class="btn btn-danger">Full Name :- {{.Fullname}} </p>
         <p class="btn btn-danger">Email Address :- {{.Emailid}} </p>
@@ -27,7 +27,7 @@
         <p class="btn btn-danger">Twitter Linked :- {{.Twitterlinked}} </p><br><br>
 
         <form action="/profile" method="POST">
-          <button type="submit" name="usrname" value={{.Username}} class="btn btn-danger"> Go to Profile</button>
+          <button type="submit" name="usrname" value={{.Username}} class="btn btn-danger"><span class="fa fa-resistance"></span> Go to Profile <span class="fa fa-resistance"></span></button>
         </form>        
     </div>
 </div>

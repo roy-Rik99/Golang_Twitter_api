@@ -32,8 +32,8 @@ func main() {
 	http.HandleFunc("/register", register)        //base-->register
 	http.HandleFunc("/register/welcome", welcome) //base-->register-->welcome-->profile
 
-	http.HandleFunc("/twitteregister", twitteregister)         //base-->twitteregister-->profile
-	http.HandleFunc("/twitteregister/welcome", twitterwelcome) //base-->twitteregister-->profile
+	http.HandleFunc("/twitteregister", twitteregister)         //base-->twitteregister-->welcome
+	http.HandleFunc("/twitteregister/welcome", twitterwelcome) //base-->twitteregister-->welcome-->profile
 
 	//http.HandleFunc("/try", test)
 	log.Fatalln((http.ListenAndServe("177.186.149.2:8080", nil)))
@@ -45,7 +45,11 @@ func index(w http.ResponseWriter, r *http.Request) {
 func profile(w http.ResponseWriter, r *http.Request) {
 	var err int
 	usrname := r.FormValue("usrname")
-
+	if usrname == "" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		fmt.Println("\nALERT :--> USER-Name Field is Empty!\n\tPlease enter valid USER-Name.")
+		return
+	}
 	user, err = twitterapi.Viewprofile(usrname)
 	if err != 0 {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -105,9 +109,13 @@ func twitteregister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	usrname := r.FormValue("usrname")
+	if usrname == "" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		fmt.Println("\nALERT :--> USER-Name Field is Empty!\n\tPlease enter valid USER-Name.")
+		return
+	}
 	var err int
 	_, err = twitterapi.Viewprofile(usrname)
-
 	if err == 0 {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		fmt.Println("\nALERT :--> USER-Name already exists!")
