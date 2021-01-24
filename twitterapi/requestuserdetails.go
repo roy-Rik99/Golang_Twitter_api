@@ -3,8 +3,6 @@ package twitterapi
 import (
 	"encoding/json"
 	"fmt"
-
-	//"image/jpeg"
 	"net/http"
 	"net/url"
 	"os"
@@ -20,40 +18,29 @@ type credentials struct {
 	AccessTokenSecret string
 }
 
-//UserDetails contains selected USER Basic Information
-type UserDetails struct {
-	UserID       uint64 `json:"id"`
-	Name         string `json:"name"`
-	ScreenName   string `json:"screen_name"`
-	Desc         string `json:"description"`
-	Location     string `json:"location"`
-	FriendsCount uint16 `json:"friends_count"`
-	URL          string `json:"url"`
-}
-
-//UserInfo dfgsgs
-var UserInfo UserDetails
-
-func setCredentials(userToken *credentials, c Cred) {
-	userToken.ConsumerKey = c.Apikey
-	userToken.ConsumerSecret = c.Apisecret
-	userToken.AccessToken = c.Accesskey
-	userToken.AccessTokenSecret = c.Accesssecret
+//Twitterinfo contains selected USER Basic Information
+type Twitterinfo struct {
+	TwitterID  int64  `json:"id"`
+	Name       string `json:"name"`
+	ScreenName string `json:"screen_name"`
+	Desc       string `json:"description"`
+	Location   string `json:"location"`
+	URL        string `json:"url"`
 }
 
 //returnClient() loads the credentials from struct to the api and returns a twittergo.Client object
-func returnClient(userToken credentials) (client *twittergo.Client) {
+func returnClient(userToken Twittercred) (client *twittergo.Client) {
 	config := &oauth1a.ClientConfig{
-		ConsumerKey:    userToken.ConsumerKey,
-		ConsumerSecret: userToken.ConsumerSecret,
+		ConsumerKey:    userToken.Apikey,
+		ConsumerSecret: userToken.Apisecret,
 	}
-	user := oauth1a.NewAuthorizedConfig(userToken.AccessToken, userToken.AccessTokenSecret)
+	user := oauth1a.NewAuthorizedConfig(userToken.Accesskey, userToken.Accesssecret)
 	client = twittergo.NewClient(config, user)
 	return
 }
 
 //returnClient() send a verification requesttwittergo.Client object
-func verify(client *twittergo.Client) UserDetails {
+func verify(client *twittergo.Client) Twitterinfo {
 	var (
 		err  error
 		req  *http.Request
@@ -81,7 +68,7 @@ func verify(client *twittergo.Client) UserDetails {
 
 	tempResponse := resp.ReadBody()
 	//fmt.Printf("\n\n%v\n\n", tempResponse)
-	var jsonvar UserDetails
+	var jsonvar Twitterinfo
 	json.Unmarshal([]byte(tempResponse), &jsonvar)
 
 	return jsonvar
@@ -89,14 +76,10 @@ func verify(client *twittergo.Client) UserDetails {
 }
 
 //RequestUserDetails loads the user tokes of USERName from a DB to a struct, uses the struct to authenticate client and uses client to access essential user details and store then to DB
-func RequestUserDetails(name string) {
-	var cred credentials
-
-	usercred := ObtainTokenbyName(name)
-
-	setCredentials(&cred, usercred)
-
+func RequestUserDetails(cred Twittercred) Twitterinfo {
 	client := returnClient(cred)
-
-	UserInfo = verify(client)
+	//UserInfo obtains Twitter User Information in JSON format
+	var twitterinfo Twitterinfo
+	twitterinfo = verify(client)
+	return twitterinfo
 }

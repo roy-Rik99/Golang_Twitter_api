@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <title>Twitter SignUp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> <!-- load bulma css -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        body        { padding-top:70px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron text-center text-success">
+        <h1><span class="fa fa-lock"></span> Sign In</h1>
+        <br>
+        <p>Login:</p>
+
+        <form action="/profile" method="POST" id="login">
+            <label for="uname">User Name:</label>
+            <input type="text" id="uname" name="usrname">
+        </form>
+        <button type="submit" form="login" value="Submit" class="btn btn-danger"><span class="fa fa-twitter"></span> LOGIN</button>
+
+    </div>
+</div>
+<div class="container">
+    <div class="jumbotron text-center text-success">
+        <h1><span class="fa fa-lock"></span> Sign Up</h1>
+        <br>
+        <p>Register as New User:</p>
+
+        <form action="/register" method="POST" id="register">
+            <label for="uname">User Name:</label>
+            <input type="text" id="uname" name="usrname">
+        </form>
+        <button type="submit" form="register" value="Submit" class="btn btn-danger"><span class="fa fa-twitter"></span> Register</button>
+        
+        <br>
+        <br>
+
+        <p>Register with twitter:</p>        
+       <form action="/twitteregister" method="POST" id="twitter">
+        <label for="uname">User Name:</label>
+        <input type="text" id="uname" name="usrname">
+    </form>
+    <button type="submit" form="twitter" value="Submit" class="btn btn-danger"><span class="fa fa-twitter"></span> Signup with Twitter</button>
+
+    </div>
+</div>
+</body>
+</html> 

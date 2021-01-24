@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <title>Twitter SignUp</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> <!-- load bulma css -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        body        { padding-top:70px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron text-center text-success">
+        <h1><span class="fa fa-lock"></span> {{.Username}}'s Information :--- </h1><br>
+
+        <p class="btn btn-danger">Full Name :- {{.Fullname}} </p>
+        <p class="btn btn-danger">Email Address :- {{.Emailid}} </p>
+        <p class="btn btn-danger">Gender :- {{.Gender}} </p><br>
+        <p class="btn btn-danger">Location :- {{.Location}} </p><br>
+        <p class="btn btn-danger">URL :- {{.URL}} </a></p><br>
+        <p class="btn btn-danger">Status :- {{.Status}} </p><br>
+        <p class="btn btn-danger">Twitter Linked :- {{.Twitterlinked}} </p><br><br>
+
+        <p><form action="/" method="POST">
+                <button type="submit" value="Submit" class="btn btn-danger"> Logout</button>
+           </form>
+        </p>
+        <p>
+            <form action="/profile/edit" method="POST">
+                <button type="submit" value="Submit" class="btn btn-danger"> Edit Account</button>
+            </form>
+        </p>
+            
+    </div>
+</div>
+</body>
+</html> 

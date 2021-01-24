@@ -5,46 +5,87 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite" //using sqlite
 )
 
-//User struct stores user credentials
-type User struct {
-	ID      int    `gorm:"column:ID"`
-	Appid   uint32 `gorm:"column:Appid"`
-	Appname string `gorm:"column:Appname"`
-	Accname string `gorm:"column:Accname"`
+//Userprofile struct stores user credentials
+type Userprofile struct {
+	ID            int64  `gorm:"column:ID"`
+	Username      string `gorm:"column:Username"`
+	Fullname      string `gorm:"column:Fullname"`
+	Emailid       string `gorm:"column:Emailid"`
+	Gender        string `gorm:"column:Gender"`
+	URL           string `gorm:"column:Url"`
+	Status        string `gorm:"column:Status"`
+	Location      string `gorm:"column:Location"`
+	Twitterlinked string `gorm:"column:Twitterlinked"`
 }
 
-//Cred store user tokens
-type Cred struct {
-	ID           int    `gorm:"column:ID"`
+//Twittercred store user tokens
+type Twittercred struct {
+	Userid       int    `gorm:"column:Userid"`
+	Username     string `gorm:"column:Username"`
 	Apikey       string `gorm:"column:Apikey"`
 	Apisecret    string `gorm:"column:Apisecret"`
 	Accesskey    string `gorm:"column:Accesskey"`
 	Accesssecret string `gorm:"column:Accesssecret"`
+	Appid        uint32 `gorm:"column:Appid"`
+	Appname      string `gorm:"column:Appname"`
 }
 
-func readCredDBtostruct(db *gorm.DB, id int) Cred {
-
-	var cred Cred
-	db.Raw("SELECT * FROM Cred  WHERE ID = ?", id).Scan(&cred)
-	//fmt.Println(cred)
-	return cred
-}
-func readUserDBtostruct(db *gorm.DB, name string) User {
-	var user User
-	db.Raw("SELECT * FROM User  WHERE Accname = ?", name).Scan(&user)
-	//fmt.Println(user)
-	return user
-}
-
-//ObtainTokenbyName exports Cred struct of UserName Passed
-func ObtainTokenbyName(n string) Cred {
-	db, err := gorm.Open("sqlite3", "twitter.db")
+//CreateNewUserProfile creates a new user through registration
+func CreateNewUserProfile(newUser Userprofile) {
+	db, err := gorm.Open("sqlite3", "site.db")
 	if err != nil {
 		panic("can't connect to database")
 	}
 	defer db.Close()
-	//db.LogMode(true)
-	userinfo := readUserDBtostruct(db, n)
-	usercred := readCredDBtostruct(db, userinfo.ID)
-	return usercred
+	db.LogMode(true)
+
+	db.Select("Username", "Fullname", "Emailid", "Gender", "URL", "Status", "Location", "Twitterlinked").Create(&newUser)
+}
+
+//Viewprofile sends you your profile details with associated username otherwise returns error!
+func Viewprofile(uname string) (Userprofile, int) {
+	db, err := gorm.Open("sqlite3", "site.db")
+	if err != nil {
+		panic("can't connect to database")
+	}
+	defer db.Close()
+	db.LogMode(true)
+
+	var (
+		errno int
+		info  Userprofile
+	)
+
+	result := db.Raw("SELECT * FROM Userprofiles  WHERE Username = ?", uname).Scan(&info)
+	flag := result.RecordNotFound()
+	if flag {
+		errno = 1
+	} else {
+		errno = 0
+	}
+	return info, errno
+}
+
+//TwitterCredbyUName exports Twittercred struct of UserName passed
+func TwitterCredbyUName(uname string) (Twittercred, int) {
+	db, err := gorm.Open("sqlite3", "site.db")
+	if err != nil {
+		panic("can't connect to database")
+	}
+	defer db.Close()
+	db.LogMode(true)
+
+	var (
+		errno int
+		cred  Twittercred
+	)
+
+	result := db.Raw("SELECT * FROM Twittercreds  WHERE Username = ?", uname).Scan(&cred)
+	flag := result.RecordNotFound()
+	if flag {
+		errno = 1
+	} else {
+		errno = 0
+	}
+	return cred, errno
 }
