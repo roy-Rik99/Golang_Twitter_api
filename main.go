@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Projects/twitterapi"
+	"GolangTwitterapi/twitterapi"
 	"fmt"
 	"html/template"
 	"log"

@@ -1,4 +1,4 @@
-module Projects
+module GolangTwitterapi
 
 go 1.15
 
