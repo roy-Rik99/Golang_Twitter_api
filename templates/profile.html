@@ -19,10 +19,19 @@
         <p class="btn btn-danger">Location :- {{.Location}} </p><br>
         <p class="btn btn-danger">URL :- {{.URL}} </a></p><br>
         <p class="btn btn-danger">Status :- {{.Status}} </p><br>
-        <p class="btn btn-danger">Twitter Linked :- {{.Twitterlinked}} </p><br><br><br><br><br><br>
+        <p class="btn btn-danger">Twitter Linked :- {{.Twitterlinked}} </p>
+    </div>
+</div>
+<div class="container">
+    <div class="jumbotron text-center text-success">
         <p>
-            <form action="/profile/edit" method="POST">
+            <form action="/profile/editprofile" method="POST">
                 <button type="submit" value="Submit" class="btn btn-danger"><span class="fa fa-edit"></span> Edit Account</button>
+            </form>
+        </p>
+        <p>
+            <form action="/profile/removeprofile" method="POST">
+                <button type="submit" name="usrname" value="{{.Username}}" class="btn btn-danger"><span class="fa fa-remove"></span> Remove Account</button>
             </form>
         </p>
         <p>

@@ -23,15 +23,18 @@ func checklogin(uname string) int {
 	return 1
 
 }
-func main() {
 
+func main() {
 	http.HandleFunc("/", index)
 
-	http.HandleFunc("/profile", profile) //base-->login-->profile
-
-	http.HandleFunc("/register", register)        //base-->register
-	http.HandleFunc("/register/welcome", welcome) //base-->register-->welcome-->profile
-
+	http.HandleFunc("/profile", profile)                     //base-->login-->profile
+	http.HandleFunc("/profile/editprofile", editprofile)     //base-->login-->profile-->editprofile
+	http.HandleFunc("/profile/removeprofile", removeaccount) //base-->login-->profile-->removeprofile
+	/*http.HandleFunc("/profile/removeprofile", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "removal!")
+	})*/
+	http.HandleFunc("/register", register)                     //base-->register
+	http.HandleFunc("/register/welcome", welcome)              //base-->register-->welcome-->profile
 	http.HandleFunc("/twitteregister", twitteregister)         //base-->twitteregister-->welcome
 	http.HandleFunc("/twitteregister/welcome", twitterwelcome) //base-->twitteregister-->welcome-->profile
 
@@ -44,6 +47,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 }
 func profile(w http.ResponseWriter, r *http.Request) {
 	var err int
+	fmt.Println("profile")
 	usrname := r.FormValue("usrname")
 	if usrname == "" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -59,8 +63,47 @@ func profile(w http.ResponseWriter, r *http.Request) {
 
 	tpl.ExecuteTemplate(w, "profile.html", user)
 }
+func editprofile(w http.ResponseWriter, r *http.Request) {
+	/*var err int
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	usrname := r.FormValue("usrname")
+	if usrname == "" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		fmt.Println("\nALERT :--> USER-Name Field is Empty!\n\tPlease enter valid USER-Name.")
+		return
+	}
+
+	_, err = twitterapi.Viewprofile(usrname)
+	if err == 0 {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		fmt.Println("\nALERT :--> USER-Name already exists!")
+		return
+	}
+	user.Username = usrname
+
+	tpl.ExecuteTemplate(w, "register.html", user)*/
+}
+func removeaccount(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "POST" {
+		http.Redirect(w, r, "/profile", http.StatusSeeOther)
+		return
+	}
+	usrname := r.FormValue("usrname")
+	err := twitterapi.Removeprofile(usrname)
+	if err != nil {
+		fmt.Printf("\nALERT :--> %v\n", err)
+		http.Redirect(w, r, "/profile", http.StatusNotFound)
+		return
+	}
+	fmt.Printf("\nALERT :--> User %v has been removed!\n", usrname)
+	tpl.ExecuteTemplate(w, "delete.html", nil)
+}
 func register(w http.ResponseWriter, r *http.Request) {
 	var err int
+	fmt.Println("register")
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -104,6 +147,7 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 }
 
 func twitteregister(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("twitterregister")
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return

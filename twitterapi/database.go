@@ -66,6 +66,20 @@ func Viewprofile(uname string) (Userprofile, int) {
 	return info, errno
 }
 
+//Removeprofile deletes User with specified User.Username
+func Removeprofile(uname string) error {
+	db, err := gorm.Open("sqlite3", "site.db")
+	if err != nil {
+		panic("can't connect to database")
+	}
+	defer db.Close()
+	db.LogMode(true)
+
+	query := db.Where("Username = ?", uname).Delete(&Userprofile{})
+
+	return query.Error
+}
+
 //TwitterCredbyUName exports Twittercred struct of UserName passed
 func TwitterCredbyUName(uname string) (Twittercred, int) {
 	db, err := gorm.Open("sqlite3", "site.db")
