@@ -2,7 +2,7 @@
 <html>
    
    <head>
-      <title>Register New User</title>
+      <title>Edit Existing User</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> <!-- load bulma css -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
     <style>
@@ -15,10 +15,12 @@
    <body>   
       <div class="container">
          <div class="jumbotron text-center text-success">
-             <h1><span class="fa fa-edit"></span> Enter Details for New User, {{.Username}}</h1>
+             <h1><span class="fa fa-edit"></span> Edit Details for Existing User, {{.Username}}</h1>
      
-             <form action="/register/welcome" method="POST" id="newuserform">
-     
+             <form action="/profile/editprofile/savechanges" method="POST" id="newuserform">
+
+                <p class="btn btn-danger">Leave fields blank to keep your data unchanged!</p>
+
                 <p><label for="Fname">*Full Name:    </label>
                     <input type="text" id="Fname" name="name"></p>
         
@@ -43,7 +45,7 @@
      
              </form>
      
-             <button type="submit" form="newuserform" name="usrname" value="{{.Username}}" class="btn btn-danger">Create Account</button>
+             <button type="submit" form="newuserform" name="usrname" value="{{.Username}}" class="btn btn-danger"><span class="fa fa-save"></span> Save changes</button>
              
          </div>
      </div>

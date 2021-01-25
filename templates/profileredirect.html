@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+   
+   <head>
+      <title>Register New User</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> <!-- load bulma css -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <style>
+        body        { padding-top:70px; }
+    </style>
+   </head>
+   
+   <body>   
+      <div class="container">
+         <div class="jumbotron text-center text-success">
+             <h1><span class="fa fa-edit"></span> Your profile has beeen edited, {{.Username}}! <span class="fa fa-edit"></span></h1>
+             <p>
+                <form action="/profile" method="POST">
+                    <button type="submit" name="usrname" value="{{.Username}}" class="btn btn-danger"><span class="fa fa-sign-out"></span> Go to Profile</button>
+               </form>
+            </p>
+         </div>
+      </div>
+   </body>
+</html>

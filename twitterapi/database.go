@@ -30,6 +30,36 @@ type Twittercred struct {
 	Appname      string `gorm:"column:Appname"`
 }
 
+//UpdateUserProfile creates a new user through registration
+func UpdateUserProfile(newDetails Userprofile) {
+	db, err := gorm.Open("sqlite3", "site.db")
+	if err != nil {
+		panic("can't connect to database")
+	}
+	defer db.Close()
+	db.LogMode(true)
+
+	if newDetails.Fullname != "" {
+		db.Model(&Userprofile{}).Where("Username = ?", newDetails.Username).Update("Fullname", newDetails.Fullname)
+	}
+
+	if newDetails.Emailid != "" {
+		db.Model(&Userprofile{}).Where("Username = ?", newDetails.Username).Update("Emailid", newDetails.Emailid)
+	}
+	if newDetails.Gender != "" {
+		db.Model(&Userprofile{}).Where("Username = ?", newDetails.Username).Update("Gender", newDetails.Gender)
+	}
+	if newDetails.URL != "" {
+		db.Model(&Userprofile{}).Where("Username = ?", newDetails.Username).Update("URL", newDetails.URL)
+	}
+	if newDetails.Status != "" {
+		db.Model(&Userprofile{}).Where("Username = ?", newDetails.Username).Update("Status", newDetails.Status)
+	}
+	if newDetails.Location != "" {
+		db.Model(&Userprofile{}).Where("Username = ?", newDetails.Username).Update("Location", newDetails.Location)
+	}
+}
+
 //CreateNewUserProfile creates a new user through registration
 func CreateNewUserProfile(newUser Userprofile) {
 	db, err := gorm.Open("sqlite3", "site.db")

@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> <!-- load fontawesome -->
     <style>
         body        { padding-top:70px; }
+        textarea    { resize: none; }
     </style>
 </head>
 <body>
@@ -17,7 +18,7 @@
         <p class="btn btn-danger">Email Address :- {{.Emailid}} </p>
         <p class="btn btn-danger">Gender :- {{.Gender}} </p><br>
         <p class="btn btn-danger">Location :- {{.Location}} </p><br>
-        <p class="btn btn-danger">URL :- {{.URL}} </a></p><br>
+        <p class="btn btn-danger">URL :- <a href="{{.URL}}" draggable="true">{{.URL}}</textarea></p><br>
         <p class="btn btn-danger">Status :- {{.Status}} </p><br>
         <p class="btn btn-danger">Twitter Linked :- {{.Twitterlinked}} </p>
     </div>
@@ -26,7 +27,7 @@
     <div class="jumbotron text-center text-success">
         <p>
             <form action="/profile/editprofile" method="POST">
-                <button type="submit" value="Submit" class="btn btn-danger"><span class="fa fa-edit"></span> Edit Account</button>
+                <button type="submit" name="usrname" value="{{.Username}}" class="btn btn-danger"><span class="fa fa-edit"></span> Edit Account</button>
             </form>
         </p>
         <p>
