@@ -30,7 +30,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "index.html", nil)
 }
 func profile(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("profile")
 	usrname := r.FormValue("usrname")
 	if usrname == "" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -122,7 +121,6 @@ func welcome(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "welcome.html", user)
 }
 func twitteregister(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("twitterregister")
 	if r.Method != "POST" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 		return
@@ -181,7 +179,5 @@ func main() {
 
 	http.HandleFunc("/twitteregister", twitteregister)         //base-->twitteregister-->welcome
 	http.HandleFunc("/twitteregister/welcome", twitterwelcome) //base-->twitteregister-->welcome-->profile
-
-	//http.HandleFunc("/try", test)
-	log.Fatalln((http.ListenAndServe("177.186.149.2:8080", nil)))
+	log.Fatalln((http.ListenAndServe("177.186.149.2:3000", nil)))
 }
